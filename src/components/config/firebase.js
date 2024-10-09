@@ -96,5 +96,20 @@ const upload = async (file) => {
   };
 
 
+  const fetchUserData = async (userId)=>{
+    try {
+        const docRef = doc(db,"users",userId);
+        const userDoc = await getDoc(docRef)
+        if(userDoc.exists()){
+            const userData = userDoc.data();
+            return userData ;
+        }else{
+            console.log("No such user");
+        }
+    } catch (error) {
+        console.error("Error fetching user data",error)
+    }
+}
 
-export {signIn, signUp, logout, auth, db, upload };
+
+export {signIn, signUp, logout, auth, db, upload, fetchUserData };

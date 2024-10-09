@@ -11,13 +11,13 @@ import Post from "./pages/Post"
 import Attributes from "./pages/Attributes"
 import Myads from "./pages/Myads";
 import { collection, getDocs } from 'firebase/firestore';
-import { db } from "./components/config/firebase";
+import { db, fetchUserData } from "./components/config/firebase";
 import AdDetails from "./pages/AdDetails";
 
 function App() {
 
   const navigate = useNavigate();
-  const {setIsUserLogged,setIsActivityOpen,fetchUserData,setUserData,allAds,setAllAds} = useContext(AppContext);
+  const {setIsUserLogged,setIsActivityOpen,setUserData,allAds,setAllAds} = useContext(AppContext);
 
   useEffect(()=>{
     onAuthStateChanged(auth,async (user)=>{

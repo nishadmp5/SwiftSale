@@ -6,6 +6,7 @@ import { RiAdvertisementLine, RiExchangeFundsLine } from 'react-icons/ri';
 import { IoChatbubbleOutline } from 'react-icons/io5';
 import { IoIosHelpCircleOutline } from 'react-icons/io';
 import { GrLanguage } from "react-icons/gr";
+import assets from '../../assets/assets';
 
 
 const Navbar = ({className}) => {
@@ -31,8 +32,8 @@ const Navbar = ({className}) => {
             <div className='flex flex-col'>
             <div className="p-5 ">
                     <div className="flex items-center  gap-4 ">
-                        <div className="w-[71.40px]  h-[60px] flex justify-center items-center">
-                            <img className="w-full h-full" src="https://statics.olx.in/external/base/img/avatar_empty_state.png" alt=""/>
+                        <div className=" h-auto w-[3rem] flex justify-center items-center">
+                            <img className="w-full h-full" src={assets.avatar} alt=""/>
                         </div>
                         <div className="flex flex-col">
                             {user 

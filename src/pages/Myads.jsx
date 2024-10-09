@@ -45,7 +45,7 @@ const Myads = () => {
 
   return (
     <div className="w-full h-auto flex flex-col">
-      <div className="h-screen w-full">
+      <div className="min-h-screen w-full">
         <div className="w-full fixed flex items-center justify-center bg-slight ">
          <div className="relative w-full h-full flex items-center justify-center bg-slight py-5 px-4">
          <span onClick={() => navigate("/")} className="absolute left-4">
@@ -55,14 +55,16 @@ const Myads = () => {
          </div>
         </div>
 
-        <div className="w-full flex flex-col gap-3 lg:gap-6 min-h-96 px-5 lg:px-80 pt-8 lg:pt-16 py-4 mt-12">
           {myAds == null ? (
-            <div className="w-48 lg:w-80 mx-auto">
-              <img className="object-contain" src={assets.loading} alt="" />
-            </div>
-          ) : myAds.length > 0 ? (
-            myAds.map((ad) => <Cards key={ad.id} ad={ad} />)
-          ) : (
+            <div className="w-full px-20 lg:px-96 h-screen flex justify-center items-center">
+            <img className="object-contain" src={assets.loading}/>
+          </div>
+          ) : myAds.length > 0 ? 
+          <div className="w-full flex flex-col gap-3 lg:gap-6 min-h-96 px-5 lg:px-80 pt-8 lg:pt-16 py-4 mt-12">
+            {myAds.map((ad) => <Cards key={ad.id} ad={ad} />)}
+          </div>
+           : (
+            <div className="w-full flex flex-col gap-3 lg:gap-6 min-h-96 px-5 lg:px-80 pt-8 lg:pt-16 py-4 mt-12">
             <div className=" flex flex-col lg:flex-row items-center text-sblue gap-2 lg:gap-40 mx-auto lg:py-20 lg:px-6">
               <img className="lg:w-[25rem]" src={assets.noAds} alt="" />
               <div className="flex flex-col gap-4 items-center">
@@ -77,8 +79,9 @@ const Myads = () => {
                 </button>
               </div>
             </div>
+            </div>
           )}
-        </div>
+        {/* </div> */}
       </div>
 
       <Footer />
