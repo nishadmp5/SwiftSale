@@ -3,7 +3,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Homepage from "./pages/Homepage"
 import Authentication from "./pages/Authentication"
-import { useContext, useEffect } from "react"
+import { useContext, useEffect, useState } from "react"
 import { onAuthStateChanged } from "firebase/auth"
 import { auth } from "./components/config/firebase"
 import { AppContext } from "./context/AppContext"
@@ -18,6 +18,9 @@ function App() {
 
   const navigate = useNavigate();
   const {setIsUserLogged,setIsActivityOpen,setUserData,allAds,setAllAds} = useContext(AppContext);
+  const [coordinates,setCoordinates] = useState({latitude: null, longitude: null})
+  const apiKey = "f39e4f862c354bf990170c93cdf5612a";
+  const apiUrl = `https://api.opencagedata.com/geocode/v1/json?q=${coordinates.latitude}%2C${coordinates.longitude}&key=${apiKey}`
 
   useEffect(()=>{
     onAuthStateChanged(auth,async (user)=>{
@@ -43,6 +46,37 @@ function App() {
     }
     fetchAllAds();
   },[])
+
+
+  useEffect(()=>{
+    if(navigator.geolocation){
+      navigator.geolocation.getCurrentPosition(
+        (position)=>{
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+          setCoordinates({latitude:latitude, longitude: longitude});
+          console.log(latitude);
+          console.log(longitude);
+      },
+      (error)=>{
+        console.error(error.code);
+      },{
+        enableHighAccuracy:true,
+        timeout: 10000,
+        maximumAge: 0
+      }
+    )
+    }else{
+      console.error("Geolocation not supported by browser")
+    }
+  },[])
+
+
+  useEffect(()=>{
+    fetch(apiUrl).then(response => response.json()).then(data =>{
+      console.log(data);
+    }).catch(error => console.error(error));
+  },[coordinates])
 
   return (
     <>

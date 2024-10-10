@@ -13,7 +13,7 @@ const Cards = ({ad}) => {
         </div>
         <div className="w-full h-auto leading-tight pl-2 lg:pl-4">
             <h1 className="text-[20px] font-semibold">{ad ? ad.price : null}</h1>
-            <h2 className="text-[14px] font-normal mt-[2px]">{ad ? ad.description.length > 25 ? ad.description.slice(0,25)+"..." : ad.description : null}</h2>
+            <h2 className="text-[14px] font-normal mt-[2px]">{ad ? ad.description.length > 10 ? ad.description.slice(0,15)+"..." : ad.description : null}</h2>
             <h3 className="text-[12px] font-light text-gray-500 mt-[5px]">{ad ? ad.title : null }</h3>
             <h3 className="text-[10px] font-light text-gray-500 mt-[5px]">{ad ? ad.location : null }</h3>
         </div>
