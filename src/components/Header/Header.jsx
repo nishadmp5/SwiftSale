@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { IoClose, IoLocationOutline, IoMenu, IoSearch } from "react-icons/io5";
 import { RiChat1Line, RiCloseLargeFill } from "react-icons/ri";
 import { IoMdNotificationsOutline } from "react-icons/io";
@@ -10,7 +10,7 @@ import { AppContext } from "../../context/AppContext";
 
 const Header = () => {
 
-    const {isActivityOpen,setIsActivityOpen} = useContext(AppContext);
+    const {isActivityOpen,setIsActivityOpen,location,setLocation} = useContext(AppContext);
 
     const handleMenuClick = ()=>{
         if(isActivityOpen){
@@ -19,18 +19,23 @@ const Header = () => {
             setIsActivityOpen(true);
         }
     }
+
+    useEffect(()=>{
+      setIsActivityOpen(false);
+    },[])
+
   return (
     <div className="bg-slight w-screen h-auto fixed ">
       <div className=" w-full h-auto flex justify-between lg:justify-center items-center z-20 relative">
         <div className="flex gap-2 items-center my-2 mx-2 md:mx-5 md:my-3">
-          <div onClick={handleMenuClick} className="bg-teal-100 p-2 rounded-full lg:hidden">
+          <div onClick={handleMenuClick} className={`${isActivityOpen ? "bg-teal-100" : ""} p-2 rounded-full lg:hidden`}>
             {isActivityOpen ? (<RiCloseLargeFill className="text-2xl text-sblue"/>) : ( <IoMenu className="text-2xl text-sblue" />)}
           </div>
           <h2 className="text-sblue font-bold text-lg">SwiftSale</h2>
         </div>
 
         <div className={`${isActivityOpen ? 'hidden lg:flex' : 'flex'} gap-2 items-center my-2 mx-2 md:mx-5 md:my-3`}>
-          <h4 className="text-sm text-sblue font-bold">Location</h4>
+          <h4 className="text-sm text-sblue font-bold">{location ? location : "Location"}</h4>
           <div>
             <IoLocationOutline className="text-sblue text-lg" />
           </div>

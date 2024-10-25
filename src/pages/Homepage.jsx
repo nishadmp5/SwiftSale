@@ -6,10 +6,12 @@ import Footer from '../components/Footer/Footer'
 
 const Home = () => {
   return (
-    <div >
+    <div className='w-full h-auto'>
+      <div className='w-full relative min-h-screen'>
       <Header/>
       <Categories/>
       <Recommendations/>
+      </div>
       <Footer/>
     </div>
   )

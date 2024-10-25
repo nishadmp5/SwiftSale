@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { getFirestore, setDoc, doc, getDoc } from "firebase/firestore"
+import { getFirestore, setDoc, doc, getDoc, collection, query, where, getDocs, deleteDoc } from "firebase/firestore"
 import { toast } from "react-toastify";
 import { getStorage,ref,uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
@@ -27,6 +27,9 @@ const signUp = async (username,email,password)=>{
             email,
             profileDp:""
         })
+        // await setDoc(doc(db,"chats",user.uid),{
+        //   chatsData: []
+        // })
     } catch (error) {
         console.error(error);
         toast.error(error.code)
@@ -111,5 +114,31 @@ const upload = async (file) => {
     }
 }
 
+const fetchCategory = async (category)=>{
+  try {
+    const collectionRef = collection(db,"ads");
+    const q = query(collectionRef,where("category","==",category));
+    let fetchedAds =[];
 
-export {signIn, signUp, logout, auth, db, upload, fetchUserData };
+    const querySnapshot = await getDocs(q)
+    querySnapshot.forEach((doc)=>{
+      fetchedAds.push(doc.data())
+    })
+    return fetchedAds;
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+const deleteAd = async (adId)=>{
+  try {
+    const docRef = doc(db,"ads",adId);
+  await deleteDoc(docRef);
+  console.log(`document with ${adId} deleted`);
+  } catch (error) {
+    console.error("error deleting document",error);
+  }
+}
+
+
+export {signIn, signUp, logout, auth, db, upload, fetchUserData, fetchCategory, deleteAd };

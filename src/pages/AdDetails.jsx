@@ -1,19 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FaArrowLeft, FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import { MdOutlineCategory } from "react-icons/md";
 import { IoLocationOutline } from "react-icons/io5";
-import { fetchUserData } from "../components/config/firebase";
+import { auth, db, deleteAd, fetchUserData } from "../components/config/firebase";
 import assets from "../assets/assets";
+import { arrayUnion, collection, doc, getDoc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
+import { AppContext } from "../context/AppContext";
+
 
 const AdDetails = () => {
+
+  const { allAds,setAllAds,loading,setLoading} = useContext(AppContext);
+
   const location = useLocation();
   const { ad } = location.state || {};
   const [currImage, setCurrImage] = useState("1");
   const navigate = useNavigate();
   const publisherId = ad.publisherId;
   const [publisherData, setPublisherData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [isUserPublisher,setIsUserPublisher] = useState(false);
+  
+  const user = auth.currentUser;
+
 
   useEffect(() => {
     const fetchPublisherData = async (publisherId) => {
@@ -24,6 +33,17 @@ const AdDetails = () => {
     };
     fetchPublisherData(publisherId);
   }, [publisherId]);
+
+
+  useEffect(()=>{
+    if(user){
+      if(user.uid === publisherId ){
+        setIsUserPublisher(true);
+      }else{
+        setIsUserPublisher(false)
+      }
+    }
+  },[publisherId])
 
   const nextSlide = () => {
     if (currImage == "1") {
@@ -36,6 +56,77 @@ const AdDetails = () => {
       setCurrImage("1");
     }
   };
+
+  const handleDeleteAd = async (adId)=>{
+    setLoading(true);
+    await deleteAd(adId);
+    navigate(-1);
+    setLoading(false)
+  }
+
+  const handleChatClick =  (contactNo)=>{
+    if(user){
+      window.open(`https://wa.me/${contactNo}?text=is it available`,'_blank');
+    }else{
+      navigate('/auth');
+    }
+  }
+
+  const handleCallClick = (contactNo)=>{
+    if(user){
+      window.location.href = `tel:${contactNo}`
+    }else{
+      navigate('/auth');
+    }
+  }
+
+  // const addChat = async ()=>{
+  //   const chatsRef = collection(db,"chats")
+  //   const messageRef = collection(db,"messages");
+
+  //   try {
+  //     const newMessageRef = doc(messageRef);
+  //     await setDoc(newMessageRef,{
+  //       createdAt: serverTimestamp(),
+  //       messages:[]
+  //     })
+
+  //     await updateDoc(doc(chatsRef,user.uid),{
+  //       chatsData: arrayUnion({
+  //         messageId: newMessageRef.id,
+  //         rId: publisherId,
+  //       })
+  //     })
+
+  //     await updateDoc(doc(chatsRef,publisherId),{
+  //       chatsData: arrayUnion({
+  //         messageId: newMessageRef.id,
+  //         rId: user.uid
+  //       })
+  //     })
+
+     
+
+  //   } catch (error) {
+  //     console.error(error.message)
+  //   }
+  // }
+
+
+  // const setChat = async(item)=>{
+
+  //   const currentChatSnapshot = await getDoc(doc(chatsRef,user.uid));
+  //   const currentChatData = currentChatSnapshot.data();
+  //   const chatIndex = currentChatData.chatsData.findIndex(
+  //     (c) => c.messageId == item.id
+  //   )
+  //   setChatData(currentChatData.chatsData[chatIndex]);
+
+
+  //   const currentMessagesDoc = await getDoc(newMessageRef);
+  //   const currentMessagesData = currentMessagesDoc.data();
+  //   setMessages(currentMessagesData.messages);
+  // }
 
   return (
     <div className="w-full h-auto flex relative flex-col text-sblue">
@@ -109,8 +200,8 @@ const AdDetails = () => {
             <h4 className="text-xs font-normal py-2">{ad.description}</h4>
           </div>
 
-          <div className="flex justify-start px-3 gap-8 items-center bg-slight rounded-md py-2">
-            <div className="h-[3rem]">
+          <div className={`${isUserPublisher ? "hidden" : "flex justify-start px-3 gap-8 items-center bg-slight rounded-md py-2" }`}>
+            <div className="h-[3rem] ">
               <img
                 className="h-full w-full object-contain"
                 src={assets.avatar}
@@ -124,13 +215,21 @@ const AdDetails = () => {
         </div>
       )}
 
-      <div className="w-full px-2 flex justify-around lg:justify-center lg:gap-3 fixed bottom-0 py-3 bg-slight z-10">
-        <button className="bg-sblue px-16 lg:px-48 text-lg py-2 text-white font-semibold rounded-md">
+      <div className={` w-full px-2 flex justify-around lg:justify-center lg:gap-3 fixed bottom-0 py-3 bg-slight z-10`}>
+        { isUserPublisher ? (
+          <div>
+            <button onClick={()=>handleDeleteAd(ad.adsId)} className="bg-sblue px-16 lg:px-48 text-lg py-2 text-white font-semibold rounded-md">Delete AD</button>
+          </div>
+        )
+      :(<div className="w-full px-2 flex justify-around lg:justify-center lg:gap-3 fixed bottom-0 py-3 bg-slight z-10">
+         <button onClick={()=>handleChatClick(ad.contactNo)} className="bg-sblue px-16 lg:px-48 text-lg py-2 text-white font-semibold rounded-md">
           Chat
         </button>
-        <button onClick={()=>window.location.href = `tel:${ad.contactNo}`} className="bg-sblue px-16 lg:px-48 text-lg py-2 text-white font-semibold rounded-md">
+        <button onClick={()=>handleCallClick(ad.contactNo)} className="bg-sblue px-16 lg:px-48 text-lg py-2 text-white font-semibold rounded-md">
           Call
         </button>
+      </div>)}
+       
       </div>
     </div>
   );

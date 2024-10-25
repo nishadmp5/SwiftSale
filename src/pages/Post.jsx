@@ -10,7 +10,7 @@ const Post = () => {
 
   return (
     <div className="w-full h-auto bg-white text-sblue">
-     <div className="h-screen w-auto">
+     <div className="min-h-screen w-auto">
      <div className="w-full relative flex items-center justify-center bg-slight py-5 px-4">
         <span onClick={() => navigate("/")} className="absolute left-4">
           <FaArrowLeft className="text-lg" />
@@ -23,25 +23,25 @@ const Post = () => {
         </div>
         <div className="lg:w-[50%] grid grid-cols-2  border-collapse">
           {categoriesData.map((category, index) => {
-            if (index === 7) {
-              return (
-                <div
-                  key={index}
-                  className="flex items-center justify-center border border-solid border-gray-300 py-7 "
-                >
-                  <div className="flex flex-col justify-center items-center gap-3">
-                    <div className="text-3xl">
-                      <BsThreeDots />
-                    </div>
-                    <h3 className="text-sm font-semibold text-center">
-                      MORE OPTIONS
-                    </h3>
-                  </div>
-                </div>
-              );
-            } else if (index > 7) {
-              return null;
-            } else {
+            // if (index === 7) {
+            //   return (
+            //     <div
+            //       key={index}
+            //       className="flex items-center justify-center border border-solid border-gray-300 py-7 "
+            //     >
+            //       <div className="flex flex-col justify-center items-center gap-3">
+            //         <div className="text-3xl">
+            //           <BsThreeDots />
+            //         </div>
+            //         <h3 className="text-sm font-semibold text-center">
+            //           MORE OPTIONS
+            //         </h3>
+            //       </div>
+            //     </div>
+            //   );
+            // } else if (index > 7) {
+            //   return null;
+            // } else {
               return (
                 <div
                   onClick={()=>navigate(`/post/attributes/${category.item}`)}
@@ -57,7 +57,7 @@ const Post = () => {
                 </div>
               );
             }
-          })}
+          )}
         </div>
       </div>
      </div>

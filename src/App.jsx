@@ -3,7 +3,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Homepage from "./pages/Homepage"
 import Authentication from "./pages/Authentication"
-import { useContext, useEffect } from "react"
+import { useContext, useEffect, useState } from "react"
 import { onAuthStateChanged } from "firebase/auth"
 import { auth } from "./components/config/firebase"
 import { AppContext } from "./context/AppContext"
@@ -17,7 +17,10 @@ import AdDetails from "./pages/AdDetails";
 function App() {
 
   const navigate = useNavigate();
-  const {setIsUserLogged,setIsActivityOpen,setUserData,allAds,setAllAds} = useContext(AppContext);
+  const {setIsUserLogged,setIsActivityOpen,setUserData,allAds,setAllAds,location,setLocation,reload,setReload} = useContext(AppContext);
+  const [coordinates,setCoordinates] = useState({latitude: null, longitude: null})
+  const apiKey = "f39e4f862c354bf990170c93cdf5612a";
+  const apiUrl = `https://api.opencagedata.com/geocode/v1/json?q=${coordinates.latitude}%2C${coordinates.longitude}&key=${apiKey}`
 
   useEffect(()=>{
     onAuthStateChanged(auth,async (user)=>{
@@ -33,6 +36,7 @@ function App() {
       }
     })
   },[])
+  
 
   useEffect(()=>{
     const fetchAllAds = async ()=>{
@@ -42,7 +46,37 @@ function App() {
       setAllAds(docs);
     }
     fetchAllAds();
+  },[reload])
+
+
+  useEffect(()=>{
+    if(navigator.geolocation){
+      navigator.geolocation.getCurrentPosition(
+        (position)=>{
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+          setCoordinates({latitude:latitude, longitude: longitude});
+      },
+      (error)=>{
+        console.error(error.code);
+      },{
+        enableHighAccuracy:true,
+        timeout: 10000,
+        maximumAge: 0
+      }
+    )
+    }else{
+      console.error("Geolocation not supported by browser")
+    }
   },[])
+
+
+  useEffect(()=>{
+    fetch(apiUrl).then(response => response.json()).then(data =>{
+      setLocation(data.results[0].components.city);
+      
+    }).catch(error => console.error(error));
+  },[coordinates])
 
   return (
     <>

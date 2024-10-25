@@ -44,6 +44,7 @@ const Attributes = () => {
             image1: image1Url,
             image2: image2Url,
             contactNo: "+91" + contactNo,
+            keywords: title.toLowerCase().split(' ')
           });
         }
       }

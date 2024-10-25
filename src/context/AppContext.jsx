@@ -10,15 +10,19 @@ const AppContextProvider = (props)=>{
     const [isActivityOpen,setIsActivityOpen] = useState(false);
     const [userData,setUserData] = useState("");
     const [allAds,setAllAds] = useState([]);
+    const [location,setLocation] = useState(null);
+    const [reload,setReload] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-
-   
 
     const value = {
         isUserLogged,setIsUserLogged,
         isActivityOpen,setIsActivityOpen,
         userData,setUserData,
-        allAds,setAllAds
+        allAds,setAllAds,
+        location,setLocation,
+        reload,setReload,
+        loading,setLoading
     }
 
     return (

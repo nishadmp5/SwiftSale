@@ -13,7 +13,7 @@ const Navbar = ({className}) => {
 
     const navigate = useNavigate();
     const {isUserLogged,setIsUserLogged} = useContext(AppContext)
-    const {userData,setIsActivityOpen} = useContext(AppContext);
+    const {userData,setIsActivityOpen,reload,setReload} = useContext(AppContext);
     const user = auth.currentUser;
 
     const handleLoginClick = ()=> {
@@ -24,7 +24,7 @@ const Navbar = ({className}) => {
         logout();
         navigate('/')
         setIsActivityOpen(false);
-
+        setReload(!reload);
     }
 
   return (
@@ -49,25 +49,25 @@ const Navbar = ({className}) => {
                     : null}
                 </div>
                 <div className="flex text-sblue flex-col border-solid border-y border-y-neutral-300 mt-2">
-                    <a onClick={()=> user ? navigate('/post') : navigate('/auth')} className="flex items-center  py-[10px] px-4 gap-2">
+                    <a onClick={()=> user ? navigate('/post') : navigate('/auth')} className="flex items-center  py-[10px] px-4 gap-2 cursor-pointer">
                          <RiExchangeFundsLine className='text-2xl'/>
                         <h2 className="font-light">Start selling</h2>
                     </a>
-                    <a onClick={()=>user ? navigate('/myads') : navigate('/auth')} className="flex items-center py-[10px] px-4 gap-2">
+                    <a onClick={()=>user ? navigate('/myads') : navigate('/auth')} className="flex items-center py-[10px] px-4 gap-2 cursor-pointer">
                          <RiAdvertisementLine className='text-2xl'/>
                         <h2 className="font-light">My ADS</h2>
                     </a>
-                    <a  className="flex items-center  py-[10px] px-4 gap-2">
+                    <a  className="flex items-center  py-[10px] px-4 gap-2 cursor-pointer">
                        <IoChatbubbleOutline className="text-2xl"/>
                         <h2 className="font-light">Chat</h2>
                     </a>
                 </div>
                 <div className="flex text-sblue flex-col">
-                    <a  className="flex items-center  py-[10px] px-4 gap-2">
+                    <a  className="flex items-center  py-[10px] px-4 gap-2 cursor-pointer">
                         <IoIosHelpCircleOutline className="text-2xl" />
                         <h2 className="font-light">Help</h2>
                     </a>
-                    <a  className="flex items-center py-[10px] px-4 gap-2">
+                    <a  className="flex items-center py-[10px] px-4 gap-2 cursor-pointer">
                        <GrLanguage className="text-2xl" />
                         <h2 className="font-light">Select language</h2>
                     </a>
